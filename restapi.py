@@ -12,7 +12,9 @@ app = Flask(__name__)
 
 DETECTION_URL = "/v1/object-detection/yolov5"
 
-
+@app.route("/")
+def index():
+    return "<h1>Hello!</h1>"
 @app.route(DETECTION_URL, methods=["POST"])
 def predict():
     if not request.method == "POST":
