@@ -55,12 +55,13 @@ if __name__ == "__main__":
     #for production
 
     from waitress import serve
-    model = torch.hub.load('ultralytics/yolov5', 'custom', path='model/best.pt', force_reload=True)
+    model = torch.hub.load('hub', 'custom', path='model/best.pt', force_reload=True, source='local')
     serve(app, host="0.0.0.0", port=8080)
 
     #debug
 
     #model = torch.hub.load('ultralytics/yolov5', 'custom', path='model/best.pt', force_reload=True)
+    #model = torch.hub.load('hub', 'custom', path='model/best.pt', force_reload=True, source='local')
     #app.run() 
 
 
