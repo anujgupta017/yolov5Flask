@@ -19,12 +19,14 @@ DETECTION_URL = "/v1/object-detection/yolov5"
 def handle_exception(e):
     """Return JSON instead of HTML for HTTP errors."""
     # start with the correct headers and status code from the error
+    cause = e.original_exception.args[0]
     response = e.get_response()
     # replace the body with JSON
     response.data = json.dumps({
         "code": e.code,
         "name": e.name,
         "description": e.description,
+        "mainreason" : cause
     })
     response.content_type = "application/json"
     return response
