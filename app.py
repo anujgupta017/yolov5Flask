@@ -15,6 +15,23 @@ app = Flask(__name__)
 
 DETECTION_URL = "/v1/object-detection/yolov5"
 
+#'''
+# Load Pre-trained Model
+model = torch.hub.load(
+        "ultralytics/yolov5", "yolov5s", pretrained=True, force_reload=True
+        )#.autoshape()  # force_reload = recache latest code
+#'''
+# Load Custom Model
+#model = torch.hub.load("ultralytics/yolov5", "custom", path = "model/best.pt", force_reload=True)
+#model = torch.hub.load('hub', 'custom', path='model/best.pt', force_reload=True, source='local')
+
+
+# Set Model Settings
+model.eval()
+model.conf = 0.6  # confidence threshold (0-1)
+model.iou = 0.45  # NMS IoU threshold (0-1) 
+
+
 @app.errorhandler(HTTPException)
 def handle_exception(e):
     """Return JSON instead of HTML for HTTP errors."""
@@ -53,15 +70,10 @@ def predict():
 
 if __name__ == "__main__":
     #for production
-
     from waitress import serve
-    model = torch.hub.load('hub', 'custom', path='model/best.pt', force_reload=True, source='local')
     serve(app, host="0.0.0.0", port=8080)
 
     #debug
-
-    #model = torch.hub.load('ultralytics/yolov5', 'custom', path='model/best.pt', force_reload=True)
-    #model = torch.hub.load('hub', 'custom', path='model/best.pt', force_reload=True, source='local')
     #app.run() 
 
 
