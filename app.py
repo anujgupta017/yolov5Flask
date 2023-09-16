@@ -17,7 +17,7 @@ DETECTION_URL = "/v1/object-detection/yolov5"
 
 #'''
 # Load Pre-trained Model
-model = torch.hub.load(
+modelDetect = torch.hub.load(
         "ultralytics/yolov5", "yolov5s", pretrained=True, force_reload=True
         )#.autoshape()  # force_reload = recache latest code
 #'''
@@ -27,9 +27,9 @@ model = torch.hub.load(
 
 
 # Set Model Settings
-model.eval()
-model.conf = 0.6  # confidence threshold (0-1)
-model.iou = 0.45  # NMS IoU threshold (0-1) 
+modelDetect.eval()
+modelDetect.conf = 0.6  # confidence threshold (0-1)
+modelDetect.iou = 0.45  # NMS IoU threshold (0-1) 
 
 
 @app.errorhandler(HTTPException)
@@ -61,7 +61,7 @@ def predict():
                 image_file = request.files["image"]
                 image_bytes = image_file.read()
                 img = Image.open(io.BytesIO(image_bytes))
-                results = model(img, size=640) # reduce size=320 for faster inference
+                results = modelDetect(img, size=640) # reduce size=320 for faster inference
                 return results.pandas().xyxy[0].to_json(orient="records")
             except Exception as ex:
                 raise ex
@@ -70,11 +70,11 @@ def predict():
 
 if __name__ == "__main__":
     #for production
-    from waitress import serve
-    serve(app, host="0.0.0.0", port=8080)
+    #from waitress import serve
+    #serve(app, host="0.0.0.0", port=8080)
 
     #debug
-    #app.run() 
+    app.run() 
 
 
  
