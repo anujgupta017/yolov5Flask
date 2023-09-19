@@ -17,13 +17,13 @@ DETECTION_URL = "/v1/object-detection/yolov5"
 
 #'''
 # Load Pre-trained Model
-modelDetect = torch.hub.load(
-        "ultralytics/yolov5", "yolov5s", pretrained=True, force_reload=True
-        )#.autoshape()  # force_reload = recache latest code
+#modelDetect = torch.hub.load(
+ #       "ultralytics/yolov5", "yolov5s", pretrained=True, force_reload=True
+  #      )#.autoshape()  # force_reload = recache latest code
 #'''
 # Load Custom Model
 #model = torch.hub.load("ultralytics/yolov5", "custom", path = "model/best.pt", force_reload=True)
-#model = torch.hub.load('hub', 'custom', path='model/best.pt', force_reload=True, source='local')
+modelDetect = torch.hub.load('hub', 'custom', path='model/best.pt', force_reload=True, source='local')
 
 
 # Set Model Settings
@@ -70,11 +70,11 @@ def predict():
 
 if __name__ == "__main__":
     #for production
-    #from waitress import serve
-    #serve(app, host="0.0.0.0", port=8080)
+    from waitress import serve
+    serve(app, host="0.0.0.0", port=8080)
 
     #debug
-    app.run() 
+    #app.run() 
 
 
  
