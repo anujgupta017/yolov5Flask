@@ -1,18 +1,36 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: myapp
+  name: gt-image-recognition
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: myapp
+      app: gt-image-recognition
   template:
     metadata:
       labels:
-        app: myapp
+        app: gt-image-recognition
     spec:
       containers:
       - name: myapp
         image: gtimagerecognition.azurecr.io/gt-image-recognition:83253
+---
+#########################################################
+# Service
+#########################################################
+apiVersion: v1
+kind: Service
+metadata:
+  name: gt-image-recognition
+  namespace: default
+spec:
+  type: LoadBalancer
+  selector:
+    app: gt-image-recognition
+  ports:
+    - port: 5000
+      protocol: TCP
+      targetPort: 80
+---
 
