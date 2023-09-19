@@ -2,19 +2,26 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: gt-image-recognition
+  namespace: default
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: gt-image-recognition
   template:
     metadata:
+      namespace: default
       labels:
         app: gt-image-recognition
     spec:
       containers:
       - name: myapp
-        image: gtimagerecognition.azurecr.io/gt-image-recognition:83253
+        image: gtimagerecognition.azurecr.io/gt-image-recognition:83285
+        ports:
+        - containerPort: 5000
+      imagePullSecrets:
+      - name: acr-secret # Reference to the secret you created
+
 ---
 #########################################################
 # Service
@@ -22,15 +29,13 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: gt-image-recognition
+  name: gt-image-recognition-service
   namespace: default
 spec:
   type: LoadBalancer
   selector:
     app: gt-image-recognition
   ports:
-    - port: 5000
+    - port: 1111
       protocol: TCP
-      targetPort: 80
----
-
+      targetPort: 5000

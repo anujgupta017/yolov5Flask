@@ -23,13 +23,13 @@ DETECTION_URL = "/v1/object-detection/yolov5"
 #'''
 # Load Custom Model
 #model = torch.hub.load("ultralytics/yolov5", "custom", path = "model/best.pt", force_reload=True)
-modelDetect = torch.hub.load('hub', 'custom', path='model/best.pt', force_reload=True, source='local')
+#modelDetect = torch.hub.load('hub', 'custom', path='model/best.pt', force_reload=True, source='local')
 
 
 # Set Model Settings
-modelDetect.eval()
-modelDetect.conf = 0.6  # confidence threshold (0-1)
-modelDetect.iou = 0.45  # NMS IoU threshold (0-1) 
+#modelDetect.eval()
+#modelDetect.conf = 0.6  # confidence threshold (0-1)
+#modelDetect.iou = 0.45  # NMS IoU threshold (0-1) 
 
 
 @app.errorhandler(HTTPException)
@@ -61,6 +61,8 @@ def predict():
                 image_file = request.files["image"]
                 image_bytes = image_file.read()
                 img = Image.open(io.BytesIO(image_bytes))
+                modelDetect = torch.hub.load('hub', 'custom', path='model/best.pt', force_reload=True, source='local')
+                modelDetect.eval()
                 results = modelDetect(img, size=640) # reduce size=320 for faster inference
                 return results.pandas().xyxy[0].to_json(orient="records")
             except Exception as ex:
